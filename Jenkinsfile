@@ -141,6 +141,7 @@ pipeline {
 
           				echo "Application URL: http://$APP_URL"
     			'''
+			}
 		    }
 	    }
 	}
