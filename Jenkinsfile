@@ -21,11 +21,13 @@ pipeline {
         stage('Maven Build'){
             steps {
                 echo 'Building Java App with Maven'
+		sh 'mvn clean package'
             }
         }
         stage('JUnit Test of Java App'){
             steps {
                 echo 'JUnit Testing'
+		sh 'mvn test'
             }
         }
         stage('SonarQube Analysis'){
