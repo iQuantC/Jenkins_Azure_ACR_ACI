@@ -8,6 +8,9 @@ pipeline {
 	SONAR_SCANNER_HOME = tool 'sonar7'
 	IMAGE_NAME = "java-app"
         IMAGE_TAG = "${BUILD_NUMBER}"
+	ACR_NAME = "javaapprepo00"
+	ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
+	RESOURCE_GROUP = "iquant-00"
     }
     stages {
         stage('Initialize Pipeline'){
@@ -90,7 +93,18 @@ pipeline {
         }
 	stage('Tag & Push Image to Azure Container Registry (ACR)') {
             steps {
-		echo 'Tagging and Pushing Image to ACR'
+		withCredentials([file(credentialsId: 'azServicePrincipal', variable: 'AZURE_CRED')]) {
+			sh '''
+				echo 'Tagging and Pushing Image to ACR'
+    				az acr login --name $ACR_NAME
+
+          			echo "Tagging Docker image..."
+          			docker tag $IMAGE_NAME:$IMAGE_TAG $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+
+          			echo "Pushing Docker image to ACR..."
+          			docker push $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG
+       			'''
+		}
             }
         }
 	stage('Deploy to Azure Container Instance (ACI) & Get App URL') {
