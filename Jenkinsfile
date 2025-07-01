@@ -15,6 +15,7 @@ pipeline {
         stage('Checkout GitHub Codes'){
             steps {
                 echo 'Checking out GitHub Codes'
+		checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins-git', url: 'https://github.com/iQuantC/Jenkins_Azure_ACR_ACI.git']])
             }
         }
         stage('Maven Build'){
