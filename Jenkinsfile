@@ -4,6 +4,8 @@ pipeline {
         stage('Initialize Pipeline'){
             steps {
                 echo 'Initializing Pipeline ...'
+		sh 'java -version'
+		sh 'mvn -version'
             }
         }
         stage('Checkout GitHub Codes'){
