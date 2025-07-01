@@ -11,6 +11,8 @@ pipeline {
 	ACR_NAME = "javaapprepo00"
 	ACR_LOGIN_SERVER = "${ACR_NAME}.azurecr.io"
 	RESOURCE_GROUP = "iquant-00"
+	ACI_NAME = "java-app-container"
+	ACI_REGION = "eastus"
     }
     stages {
         stage('Initialize Pipeline'){
@@ -109,7 +111,36 @@ pipeline {
         }
 	stage('Deploy to Azure Container Instance (ACI) & Get App URL') {
 	    steps {
-		echo 'Deploying Image to ACI'
+		withCredentials([file(credentialsId: 'azServicePrincipal', variable: 'AZURE_CRED')]) {
+			sh '''
+				echo 'Deploying Image to ACI'
+				az container create \
+            					--name $ACI_NAME \
+            					--resource-group $RESOURCE_GROUP \
+            					--image $ACR_LOGIN_SERVER/$IMAGE_NAME:$IMAGE_TAG \
+            					--registry-login-server $ACR_LOGIN_SERVER \
+            					--registry-username $(az acr credential show --name $ACR_NAME --query username -o tsv) \
+            					--registry-password $(az acr credential show --name $ACR_NAME --query passwords[0].value -o tsv) \
+            					--dns-name-label java-app-${BUILD_NUMBER} \
+            					--ports 8090 \
+            					--location $ACI_REGION \
+		 				--os-type Linux \
+       						--cpu 1 \
+  						--memory 1.5 \
+		 				--restart-policy Never
+
+       					echo "Waiting for ACI to initialize..."
+          				sleep 30
+
+       					echo "Getting the URL of the ACI app..."
+          				APP_URL=$(az container show \
+            					--resource-group $RESOURCE_GROUP \
+            					--name $ACI_NAME \
+            					--query ipAddress.fqdn \
+            					--output tsv):8090
+
+          				echo "Application URL: http://$APP_URL"
+    			'''
 		    }
 	    }
 	}
