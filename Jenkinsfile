@@ -76,7 +76,16 @@ pipeline {
         }
 	stage('Authenticate with Azure') {
             steps {
-		echo 'Authenticating with Azure'
+		withCredentials([file(credentialsId: 'azServicePrincipal', variable: 'AZURE_CRED')]) {
+			sh '''
+				echo 'Authenticating with Azure'
+    				az login --service-principal --username $(jq -r .clientId $AZURE_CRED) \
+              					--password $(jq -r .clientSecret $AZURE_CRED) \
+              					--tenant $(jq -r .tenantId $AZURE_CRED) > /dev/null
+            			az account set --subscription $(jq -r .subscriptionId $AZURE_CRED)
+			'''
+		}
+		
             }
         }
 	stage('Tag & Push Image to Azure Container Registry (ACR)') {
