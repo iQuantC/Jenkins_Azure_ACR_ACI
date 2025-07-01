@@ -79,12 +79,12 @@ pipeline {
 		echo 'Authenticating with Azure'
             }
         }
-	stage('Tag & Push Image to Azure Container Registry') {
+	stage('Tag & Push Image to Azure Container Registry (ACR)') {
             steps {
 		echo 'Tagging and Pushing Image to ACR'
             }
         }
-	stage('Deploy to Azure Container Instance & Get App URL') {
+	stage('Deploy to Azure Container Instance (ACI) & Get App URL') {
 	    steps {
 		echo 'Deploying Image to ACI'
 		    }
