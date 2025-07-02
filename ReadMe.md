@@ -12,7 +12,7 @@ In this hands-on DevOps tutorial, we’ll walk through building a full-fledged J
 5. Microsoft Azure Account & Azure CLI
 
 
-### Test the Application Locally
+## Deploy the Application Locally
 Install Java
 ```sh
 sudo apt update
@@ -85,6 +85,7 @@ http://localhost:8090
 Ctrl + C to exit
 
 
+# Deploy Application to the Cloud
 ## Set up Jenkins with a Container
 We want to build a docker image later with our Jenkins Pipeline, so we need a Jenkins Container or VM with Docker in it (i.e., Docker-in-Docker or DinD)
 
