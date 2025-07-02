@@ -1,4 +1,5 @@
 # Deploy App to Azure Container Instance using Jenkins CI/CD Pipeline
+In this hands-on DevOps tutorial, we’ll walk through building a full-fledged Jenkins CI/CD pipeline to deploy a Java application to Microsoft Azure Container Instance using industry-standard tools and best practices.
 
 
 ## Requirements
@@ -472,4 +473,4 @@ Add webhook
 3. Stop and Delete Jenkins & SonarQube containers
 
 
-# LIKE, COMMENT, & SUBSCRIBE To iQuant on YouTube !!!
+*** LIKE, COMMENT, & SUBSCRIBE To iQuant on YouTube !!!***
