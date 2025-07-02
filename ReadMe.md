@@ -431,44 +431,6 @@ az provider register --namespace Microsoft.ContainerInstance
 ```
 On Azure Portal > Go to Container Instances and Refresh to verify > Settings and click Containers
 
-
-### Setup Jenkins GitHub Webhooks
-Automate Jenkins pipeline build on "git push"
-
-1. On Jenkins, Go to the Jenkins job > Configure > Select the "GitHub hook trigger for GITScm polling" trigger > Apply & Save
-2. On GitHub project repo > Settings > Webhooks > Add webhook 
-3. But our Jenkins container is running locally thus GitHub can't locate its endpoint on the cloud. 
-4. Since, I am not using a cloud VM, I will expose my Jenkins container to the cloud using NGROK bcuz Payload URL: the jenkins url (http://ip:8080/github-webhook/) will NOT work.
-5. Install NGROK on your linux system (Ngrok creates a secure tunnel)
-```sh
-sudo snap install ngrok
-```
-6. Go to https://dashboard.ngrok.com/signup and sign up. Save your ngrok recovery files safe & setup MFA as well.
-7. On your linux terminal, run the command that's given to add authtoken to the default ngrok.yml config file. The command looks like this: 
-```sh
-ngrok config add-authtoken someRandomStringHere
-```
-8. Now, Deploy your app online with the command
-```sh
-ngrok http http://ip:8080
-```
-9. You will get a public URL (forwarding link) that looks like 
-```sh
-https://582f-2603-8080-91f0-4ef0-e8ad-7ee-7ee8-4a4f.ngrok-free.app -> http://ip:8080
-```
-
-Now your payload URL should be:
-```sh
-Payload URL: the jenkins url (https://582f-2603-8080-91f0-4ef0-e8ad-7ee-7ee8-4a4f.ngrok-free.app/github-webhook/)
-Content type: application/json
-Secret: leave blank
-SSL verification: Disable
-Even: Just the push event
-Active
-Add webhook
-```
-
-
 ## Clean Up
 1. Stop and Delete the ACI service
 2. Delete the ACR Repo and Image
